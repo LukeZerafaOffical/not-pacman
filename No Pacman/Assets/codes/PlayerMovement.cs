@@ -19,16 +19,20 @@ public class PlayerMovement : MonoBehaviour
             movement.x = Input.GetAxisRaw("Horizontal");
             movement.y = Input.GetAxisRaw("Vertical");
         }
+        //Make sure the sprite is facing the right direction in the x-axis
         if(movement.x == -1)
         {
             sp.flipX = true;
-            sp.gameObject.transform.localRotation = Quaternion.Euler(0,0,0);
+            movement.y = 0; //This makes thex-axis take preference over y-axis movement
+            sp.gameObject.transform.localRotation = Quaternion.Euler(0,0,0); //Reset rotation
         }
         else if(movement.x == 1)
         {
             sp.flipX = false;
-            sp.gameObject.transform.localRotation = Quaternion.Euler(0,0,0);
+            movement.y = 0; //This makes thex-axis take preference over y-axis movement
+            sp.gameObject.transform.localRotation = Quaternion.Euler(0,0,0); //Reset rotation
         }
+        //Make sure the sprite is facing the right direction in the y-axis
         if(movement.y == -1)
         {
             sp.gameObject.transform.localRotation = Quaternion.Euler(0,0,90);
@@ -43,8 +47,11 @@ public class PlayerMovement : MonoBehaviour
     }
     void FixedUpdate()
     {
-        
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
     }
-    
+    void OnCollisionEnter2D(Collision2D collider)
+    {
+        movement = Vector2.zero;
+        rb.velocity = Vector2.zero;
+    }
 }
